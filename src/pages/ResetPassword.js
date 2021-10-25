@@ -6,18 +6,35 @@ import {
   Image,
   Link,
   Text,
-} from "@chakra-ui/react";
-import { resetPassword } from "api/handler/auth";
-import { Form, Formik } from "formik";
-import React, { useState } from "react";
-import { Link as RLink, useHistory, useParams } from "react-router-dom";
-import userStore from "stores/userStore";
-import toErrorMap from "utils/toErrorMap";
-import InputField from "components/shared/InputField";
-import { ResetPasswordSchema } from "validation/auth.schema";
+} from '@chakra-ui/react';
+import { resetPassword } from 'api/handler/auth';
+import { Form, Formik } from 'formik';
+import { useState } from 'react';
+import { Link as RLink, useParams, useHistory } from 'react-router-dom';
+import userStore from 'stores/userStore';
+import toErrorMap from 'utils/toErrorMap';
+import InputField from 'components/shared/InputField';
+import { ResetPasswordSchema } from 'validation/auth.schema';
 
 export default function ResetPassword() {
-  async function handleSubmit() {}
+  const { token } = useParams();
+  const history = useHistory();
+  const [tokenError, setTokenError] = useState('');
+  const { setUser } = userStore();
+  async function handleSubmit(values, { setErrors }) {
+    try {
+      const { data } = await resetPassword({ ...values, token });
+      if (data) {
+        setUser(data);
+        history.push('');
+      }
+    } catch (err) {
+      const errorMap = toErrorMap(err);
+      if ('token' in errorMap) {
+        setTokenError(errorMap.token);
+      }
+    }
+  }
 
   return (
     <Flex minHeight="100vh" width="full" align="center" justifyContent="center">
@@ -30,7 +47,11 @@ export default function ResetPassword() {
             <Heading fontSize="24px">Reset Password</Heading>
           </Box>
           <Box my={4} textAlign="left">
-            <Formik>
+            <Formik
+              initialValues={{ newPassword: '', confirmNewPassword: '' }}
+              validationSchema={ResetPasswordSchema}
+              onSubmit={handleSubmit}
+            >
               {({ isSubmitting }) => (
                 <Form>
                   <InputField
@@ -53,16 +74,16 @@ export default function ResetPassword() {
                     mt={4}
                     type="submit"
                     isLoading={isSubmitting}
-                    _hover={{ bg: "highlight.hover" }}
-                    _active={{ bg: "highlight.active" }}
-                    _focus={{ boxShadow: "none" }}
+                    _hover={{ bg: 'highlight.hover' }}
+                    _active={{ bg: 'highlight.active' }}
+                    _focus={{ boxShadow: 'none' }}
                   >
                     Reset Password
                   </Button>
                 </Form>
               )}
             </Formik>
-            {"tokenError" ? (
+            {tokenError ? (
               <Flex direction="column" mt="4" justify="center" align="center">
                 <Text>Invalid or expired token.</Text>
                 <Link as={RLink} to="/forgot-password" color="red">

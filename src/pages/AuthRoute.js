@@ -4,11 +4,16 @@ import userStore from 'stores/userStore';
 
 export default function AuthRoute({ component: Component, ...rest }) {
   const { current } = userStore();
+  const localData = JSON.parse(localStorage.getItem('user-storage'));
   return (
     <Route
       {...rest}
       render={(props) =>
-        current ? <Component {...props} /> : <Redirect to="/login" />
+        current || localData ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/login" />
+        )
       }
     />
   );
