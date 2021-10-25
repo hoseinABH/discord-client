@@ -5,15 +5,15 @@ import {
   Text,
   Tooltip,
   useClipboard,
-} from "@chakra-ui/react";
-import React from "react";
-import { RiSettings5Fill } from "react-icons/ri";
-import { Link } from "react-router-dom";
-import userStore from "stores/userStore";
-
+} from '@chakra-ui/react';
+import React from 'react';
+import { RiSettings5Fill } from 'react-icons/ri';
+import { Link } from 'react-router-dom';
+import userStore from 'stores/userStore';
+import { fake_user as user } from 'utils/fake';
 export default function AccountBar() {
-  const user = userStore((state) => state.current);
-  const { hasCopied, onCopy } = useClipboard(user?.id || "");
+  // const user = userStore((state) => state.current);
+  const { hasCopied, onCopy } = useClipboard(user?.id || '');
 
   return (
     <Flex
@@ -27,30 +27,30 @@ export default function AccountBar() {
     >
       <Tooltip
         hasArrow
-        label={hasCopied ? "Copied!" : "Click to copy ID"}
-        placement={"top"}
-        bg={hasCopied ? "brandGreen" : "brandGray.darkest"}
-        color={"white"}
+        label={hasCopied ? 'Copied!' : 'Click to copy ID'}
+        placement={'top'}
+        bg={hasCopied ? 'brandGreen' : 'brandGray.darkest'}
+        color={'white'}
         closeOnClick={false}
       >
         <Flex
           align="center"
-          w={"full"}
+          w={'full'}
           mr={2}
-          _hover={{ cursor: "pointer" }}
+          _hover={{ cursor: 'pointer' }}
           onClick={onCopy}
         >
           <Avatar size="sm" src={user?.image} />
           <Text ml="2">{user?.username}</Text>
         </Flex>
       </Tooltip>
-      <Link to={"/account"}>
+      <Link to={'/account'}>
         <Tooltip
           hasArrow
-          label={"User Settings"}
-          placement={"top"}
-          bg={"brandGray.darkest"}
-          color={"white"}
+          label={'User Settings'}
+          placement={'top'}
+          bg={'brandGray.darkest'}
+          color={'white'}
         >
           <IconButton
             icon={<RiSettings5Fill />}

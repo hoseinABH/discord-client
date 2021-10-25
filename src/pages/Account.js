@@ -27,7 +27,6 @@ import { UserSchema } from 'validation/auth.schema';
 
 // fake
 import { fake_user as user } from 'utils/fake';
-import { FaPray } from 'react-icons/fa';
 
 export default function Account() {
   // const { data: user } = useQuery(aKey, getAccount);

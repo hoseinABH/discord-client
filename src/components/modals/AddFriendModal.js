@@ -13,30 +13,42 @@ import {
   ModalOverlay,
   Text,
   useClipboard,
-} from "@chakra-ui/react";
-import { sendFriendRequest } from "api/handler/account";
-import { Form, Formik } from "formik";
-import React from "react";
-import { useQueryClient } from "react-query";
-import userStore from "stores/userStore";
-import { rKey } from "utils/querykeys";
-import toErrorMap from "utils/toErrorMap";
-import InputField from "components/shared/InputField";
+} from '@chakra-ui/react';
+import { sendFriendRequest } from 'api/handler/account';
+import { Form, Formik } from 'formik';
+import { useQueryClient } from 'react-query';
+import userStore from 'stores/userStore';
+import { rKey } from 'utils/querykeys';
+import toErrorMap from 'utils/toErrorMap';
+import InputField from 'components/shared/InputField';
 
 export default function AddFriendModal({ isOpen, onClose }) {
   const current = userStore((state) => state.current);
-  const { hasCopied, onCopy } = useClipboard(current?.id || "");
+  const { hasCopied, onCopy } = useClipboard(
+    current?.id || '7898780055454559745100'
+  );
+  console.log(hasCopied);
+  const handleAddFriend = async (values, { setErrors }) => {
+    if (values.id === '' || values.id.length !== 20) {
+      setErrors({ id: 'Enter a valid ID' });
+    } else {
+      // const { data } = await sendFriendRequest(values.id);
+      // if (data) {
+      //   onClose();
+      // }
 
-  async function handleAddFriend() {}
+      onClose();
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent bg="brandGray.light">
-        <Formik initialValues={{ id: "" }} onSubmit={handleAddFriend}>
+        <Formik initialValues={{ id: '' }} onSubmit={handleAddFriend}>
           {({ isSubmitting }) => (
             <Form>
-              <ModalHeader fontWeight="bold" pb={"0"}>
+              <ModalHeader fontWeight="bold" pb={'0'}>
                 ADD FRIEND
               </ModalHeader>
               <ModalCloseButton />
@@ -44,30 +56,30 @@ export default function AddFriendModal({ isOpen, onClose }) {
                 <Text mb="4">You can add a friend with their UID.</Text>
                 <InputGroup mb={2}>
                   <InputLeftAddon
-                    bg={"#202225"}
-                    borderColor={"black"}
+                    bg={'#202225'}
+                    borderColor={'black'}
                     children="UID"
                   />
                   <Input
                     bg="brandGray.dark"
-                    borderColor={hasCopied ? "brandGreen" : "black"}
+                    borderColor={hasCopied ? 'brandGreen' : 'black'}
                     borderRadius="3px"
                     focusBorderColor="highlight.standard"
-                    value={current?.id || ""}
+                    value={current?.id || '7898780055454559745100'}
                     isReadOnly
                   />
                   <InputRightElement width="4.5rem">
                     <Button
                       h="1.75rem"
                       size="sm"
-                      bg={hasCopied ? "brandGreen" : "highlight.standard"}
+                      bg={hasCopied ? 'brandGreen' : 'highlight.standard'}
                       color="white"
-                      _hover={{ bg: "highlight.hover" }}
-                      _active={{ bg: "highlight.active" }}
-                      _focus={{ boxShadow: "none" }}
+                      _hover={{ bg: 'highlight.hover' }}
+                      _active={{ bg: 'highlight.active' }}
+                      _focus={{ boxShadow: 'none' }}
                       onClick={onCopy}
                     >
-                      {hasCopied ? "Copied" : "Copy"}
+                      {hasCopied ? 'Copied' : 'Copy'}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
@@ -79,7 +91,7 @@ export default function AddFriendModal({ isOpen, onClose }) {
                   mr={6}
                   variant="link"
                   onClick={onClose}
-                  fontSize={"14px"}
+                  fontSize={'14px'}
                 >
                   Cancel
                 </Button>
@@ -87,11 +99,11 @@ export default function AddFriendModal({ isOpen, onClose }) {
                   background="highlight.standard"
                   color="white"
                   type="submit"
-                  _hover={{ bg: "highlight.hover" }}
-                  _active={{ bg: "highlight.active" }}
-                  _focus={{ boxShadow: "none" }}
+                  _hover={{ bg: 'highlight.hover' }}
+                  _active={{ bg: 'highlight.active' }}
+                  _focus={{ boxShadow: 'none' }}
                   isLoading={isSubmitting}
-                  fontSize={"14px"}
+                  fontSize={'14px'}
                 >
                   Send Friend Request
                 </Button>
