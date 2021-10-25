@@ -10,22 +10,29 @@ import {
   Tooltip,
   useDisclosure,
   useToast,
-} from "@chakra-ui/react";
-import { getAccount, updateAccount } from "api/handler/account";
-import { logout } from "api/handler/auth";
-import { Form, Formik } from "formik";
-import React, { useRef, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
-import { useHistory } from "react-router-dom";
-import userStore from "stores/userStore";
-import { aKey } from "utils/querykeys";
-import toErrorMap from "utils/toErrorMap";
-import ChangePasswordModal from "components/modals/ChangePasswordModal";
-import CropImageModal from "components/modals/CropImageModal";
-import InputField from "components/shared/InputField";
-import { UserSchema } from "validation/auth.schema";
+} from '@chakra-ui/react';
+import { getAccount, updateAccount } from 'api/handler/account';
+import { logout as logoutApi } from 'api/handler/auth';
+import { Form, Formik } from 'formik';
+import { useRef, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
+import { useHistory } from 'react-router-dom';
+import userStore from 'stores/userStore';
+import { aKey } from 'utils/querykeys';
+import toErrorMap from 'utils/toErrorMap';
+import ChangePasswordModal from 'components/modals/ChangePasswordModal';
+import CropImageModal from 'components/modals/CropImageModal';
+import InputField from 'components/shared/InputField';
+import { UserSchema } from 'validation/auth.schema';
+
+// fake
+import { fake_user as user } from 'utils/fake';
+import { FaPray } from 'react-icons/fa';
 
 export default function Account() {
+  // const { data: user } = useQuery(aKey, getAccount);
+  const queryClient = useQueryClient();
+  const { logout, setUser } = userStore();
   const history = useHistory();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -36,17 +43,57 @@ export default function Account() {
   } = useDisclosure();
 
   const inputFile = useRef(null);
-  const [imageUrl, setImageUrl] = useState("");
-  const [cropImage, setCropImage] = useState("");
+  const [imageUrl, setImageUrl] = useState(user?.image || '');
+  const [cropImage, setCropImage] = useState('');
   const [croppedImage, setCroppedImage] = useState(null);
 
-  async function handleLogout() {}
+  const handleLogout = async () => {
+    // const { data } = await logoutApi();
+    // if (data) {
+    //   queryClient.clear();
+    //   logout();
+    //   history.push('/');
+    // }
+    logout();
+    history.push('/');
+  };
 
-  async function handleSubmit() {}
+  const handleUpdateAccount = async (values, { setErrors }) => {
+    try {
+      const formData = new FormData();
+      formData.append('email', values.email);
+      formData.append('username', values.username);
+      formData.append('image', croppedImage ?? imageUrl);
 
-  function handleSelectImage(event) {}
+      const { data } = await updateAccount(formData);
 
-  function applyCrop(file) {}
+      if (data) {
+        setUser(data);
+        toast({
+          title: 'Account Updated',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (err) {
+      setErrors(toErrorMap(err));
+    }
+  };
+
+  const handleSelectImage = (event) => {
+    if (!event.currentTarget.files) return;
+    setCropImage(URL.createObjectURL(event.currentTarget.files[0]));
+    cropperOnOpen();
+  };
+
+  const applyCrop = (file) => {
+    setImageUrl(URL.createObjectURL(file));
+    setCroppedImage(new File([file], 'avatar'));
+    cropperOnClose();
+  };
+
+  if (!user) return null;
 
   return (
     <Flex minHeight="100vh" width="full" align="center" justifyContent="center">
@@ -58,12 +105,12 @@ export default function Account() {
           <Box>
             <Formik
               initialValues={{
-                email: "",
-                username: "",
+                email: user.email || '',
+                username: user.username || '',
                 image: null,
               }}
               validationSchema={UserSchema}
-              onSubmit={handleSubmit}
+              onSubmit={handleUpdateAccount}
             >
               {({ isSubmitting, values }) => (
                 <Form>
@@ -71,9 +118,9 @@ export default function Account() {
                     <Tooltip label="Change Avatar" aria-label="Change Avatar">
                       <Avatar
                         size="xl"
-                        name={""}
-                        src={""}
-                        _hover={{ cursor: "pointer", opacity: 0.5 }}
+                        name={user.username}
+                        src={imageUrl || user.image}
+                        _hover={{ cursor: 'pointer', opacity: 0.5 }}
                         onClick={() => inputFile.current.click()}
                       />
                     </Tooltip>
@@ -104,14 +151,14 @@ export default function Account() {
                       autoComplete="username"
                     />
 
-                    <Flex my={8} align={"end"}>
+                    <Flex my={8} align={'end'}>
                       <Spacer />
                       <Button
                         mr={4}
                         colorScheme="white"
                         variant="outline"
                         onClick={history.goBack}
-                        fontSize={"14px"}
+                        fontSize={'14px'}
                       >
                         Close
                       </Button>
@@ -121,7 +168,7 @@ export default function Account() {
                           type="submit"
                           colorScheme="green"
                           isLoading={isSubmitting}
-                          fontSize={"14px"}
+                          fontSize={'14px'}
                         >
                           Update
                         </Button>
@@ -132,7 +179,7 @@ export default function Account() {
               )}
             </Formik>
           </Box>
-          <Divider my={"4"} />
+          <Divider my={'4'} />
           <Flex>
             <Heading fontSize="18px">PASSWORD AND AUTHENTICATION</Heading>
           </Flex>
@@ -141,11 +188,11 @@ export default function Account() {
               background="highlight.standard"
               color="white"
               type="submit"
-              _hover={{ bg: "highlight.hover" }}
-              _active={{ bg: "highlight.active" }}
-              _focus={{ boxShadow: "none" }}
+              _hover={{ bg: 'highlight.hover' }}
+              _active={{ bg: 'highlight.active' }}
+              _focus={{ boxShadow: 'none' }}
               onClick={onOpen}
-              fontSize={"14px"}
+              fontSize={'14px'}
             >
               Change Password
             </Button>
@@ -155,7 +202,7 @@ export default function Account() {
               colorScheme="red"
               variant="outline"
               onClick={handleLogout}
-              fontSize={"14px"}
+              fontSize={'14px'}
             >
               Logout
             </Button>

@@ -32,6 +32,8 @@ export default function ResetPassword() {
       const errorMap = toErrorMap(err);
       if ('token' in errorMap) {
         setTokenError(errorMap.token);
+      } else {
+        setErrors(errorMap);
       }
     }
   }

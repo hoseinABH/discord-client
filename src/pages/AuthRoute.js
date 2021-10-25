@@ -1,4 +1,3 @@
-import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import userStore from 'stores/userStore';
 
@@ -9,7 +8,7 @@ export default function AuthRoute({ component: Component, ...rest }) {
     <Route
       {...rest}
       render={(props) =>
-        current || localData ? (
+        current || localData?.state?.current ? (
           <Component {...props} />
         ) : (
           <Redirect to="/login" />
