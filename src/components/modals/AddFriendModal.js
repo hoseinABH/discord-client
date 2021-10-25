@@ -22,22 +22,29 @@ import { rKey } from 'utils/querykeys';
 import toErrorMap from 'utils/toErrorMap';
 import InputField from 'components/shared/InputField';
 
+//fake
+import { fake_user } from 'utils/fake';
+
 export default function AddFriendModal({ isOpen, onClose }) {
   const current = userStore((state) => state.current);
-  const { hasCopied, onCopy } = useClipboard(
-    current?.id || '7898780055454559745100'
-  );
-  console.log(hasCopied);
+  const queryClient = useQueryClient();
+  const { hasCopied, onCopy } = useClipboard(current?.id || fake_user.id);
+
   const handleAddFriend = async (values, { setErrors }) => {
     if (values.id === '' || values.id.length !== 20) {
       setErrors({ id: 'Enter a valid ID' });
     } else {
-      // const { data } = await sendFriendRequest(values.id);
-      // if (data) {
-      //   onClose();
-      // }
+      try {
+        // const { data } = await sendFriendRequest(values.id);
+        // if (data) {
+        //   onClose();
+        // }
 
-      onClose();
+        onClose();
+        queryClient.invalidateQueries(rKey);
+      } catch (err) {
+        setErrors(toErrorMap(err));
+      }
     }
   };
 
@@ -65,7 +72,7 @@ export default function AddFriendModal({ isOpen, onClose }) {
                     borderColor={hasCopied ? 'brandGreen' : 'black'}
                     borderRadius="3px"
                     focusBorderColor="highlight.standard"
-                    value={current?.id || '7898780055454559745100'}
+                    value={current?.id || fake_user.id}
                     isReadOnly
                   />
                   <InputRightElement width="4.5rem">

@@ -9,9 +9,9 @@ export const updateAccount = (body) =>
     },
   });
 
-export const getFriends = () => null;
+export const getFriends = () => api.get('/account/me/friends');
 
-export const getPendingRequests = () => null;
+export const getPendingRequests = () => api.get('/account/me/pending');
 
 export const sendFriendRequest = (id) => api.post(`/account/${id}/friend`);
 
