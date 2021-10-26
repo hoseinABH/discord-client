@@ -15,15 +15,21 @@ import { dmKey } from 'utils/querykeys';
 
 export default function DMListItem({ dm }) {
   const currentPath = `/channels/me/${dm.id}`;
+  const cache = useQueryClient();
   const location = useLocation();
+  const history = useHistory();
   const isActive = location.pathname === currentPath;
   const [showCloseButton, setShowButton] = useState(false);
 
   const handleCloseDM = async (event) => {
     event.preventDefault();
 
-    const { data } = await closeDirectMessage(dm.id);
-    if (data) {
+    await closeDirectMessage(dm.id);
+    cache.setQueryData(dmKey, (d) =>
+      d?.filter((channel) => channel.id !== dm.id)
+    );
+    if (isActive) {
+      history.replace('/channels/me');
     }
   };
 
