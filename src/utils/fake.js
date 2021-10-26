@@ -33,3 +33,50 @@ export const fake_dms = [
     },
   },
 ];
+
+export const fake_messages = [
+  {
+    id: 1,
+    text: 'this is a test message and i am test user',
+    user: {
+      id: 12,
+      username: 'asghar',
+      isOnline: true,
+    },
+    createdAt: new Date(),
+    // updatedAt,
+  },
+  {
+    id: 2,
+    text: 'this is a test message and i am test user',
+    user: {
+      id: 3,
+      username: 'ahmad',
+      isOnline: true,
+    },
+    createdAt: new Date(),
+    // updatedAt,
+  },
+  {
+    id: 1,
+    text: 'this is a test message and i am test user',
+    user: {
+      id: 4,
+      username: 'hosein',
+      isOnline: true,
+    },
+    createdAt: new Date(),
+    // updatedAt,
+  },
+  {
+    id: 1,
+    text: 'this is a test message and i am test user',
+    user: {
+      id: 6,
+      username: 'hamid',
+      isOnline: true,
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];

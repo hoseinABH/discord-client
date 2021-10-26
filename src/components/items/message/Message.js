@@ -1,24 +1,25 @@
-import { Avatar, Box, Flex, Icon, Text, useDisclosure } from "@chakra-ui/react";
-import MemberContextMenu from "components/menus/MemberContextMenu";
-import DeleteMessageModal from "components/modals/DeleteMessageModal";
-import EditMessageModal from "components/modals/EditMessageModal";
-import UserPopover from "components/sections/UserPopover";
-import useGetCurrentGuild from "hooks/useGetCurrentGuild";
-import React, { useState } from "react";
-import { Item, Menu, theme, useContextMenu } from "react-contexify";
-import { FaEllipsisH, FaRegTrashAlt } from "react-icons/fa";
-import { FiLink } from "react-icons/fi";
-import { MdEdit } from "react-icons/md";
-import { useParams } from "react-router-dom";
-import userStore from "stores/userStore";
-import { getShortenedTime, getTime } from "utils/dateUtils";
-import "../css/ContextMenu.css";
-import MessageContent from "./MessageContent";
+import { Avatar, Box, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
+import MemberContextMenu from 'components/menus/MemberContextMenu';
+import DeleteMessageModal from 'components/modals/DeleteMessageModal';
+import EditMessageModal from 'components/modals/EditMessageModal';
+import UserPopover from 'components/sections/UserPopover';
+import useGetCurrentGuild from 'hooks/useGetCurrentGuild';
+import React, { useState } from 'react';
+import { Item, Menu, theme, useContextMenu } from 'react-contexify';
+import { FaEllipsisH, FaRegTrashAlt } from 'react-icons/fa';
+import { FiLink } from 'react-icons/fi';
+import { MdEdit } from 'react-icons/md';
+import { useParams } from 'react-router-dom';
+import userStore from 'stores/userStore';
+import { getShortenedTime, getTime } from 'utils/dateUtils';
+import '../css/ContextMenu.css';
+import MessageContent from './MessageContent';
 
 export default function Message({ message, isCompact = false }) {
   const [showSettings, setShowSettings] = useState(false);
   const current = userStore((state) => state.current);
-  const isAuthor = current?.id === message.user.id;
+  // const isAuthor = current?.id === message.user.id;
+  const isAuthor = true;
   const { guildId } = useParams();
   const guild = useGetCurrentGuild(guildId);
   const isOwner = guild !== undefined && guild.ownerId === current?.id;
@@ -43,7 +44,7 @@ export default function Message({ message, isCompact = false }) {
   const { show: profileShow } = useContextMenu({ id });
 
   const openInNewTab = (url) => {
-    const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
     if (newWindow) newWindow.opener = null;
   };
 
@@ -52,40 +53,40 @@ export default function Message({ message, isCompact = false }) {
       <Flex
         alignItems="center"
         mr="1"
-        mt={isCompact ? "0" : "3"}
-        _hover={{ bg: "brandGray.hover" }}
+        mt={isCompact ? '0' : '3'}
+        _hover={{ bg: 'brandGray.hover' }}
         justify="space-between"
         onMouseLeave={() => setShowSettings(false)}
         onMouseEnter={() => setShowSettings(true)}
       >
-        <Flex w={"full"}>
+        <Flex w={'full'}>
           {isCompact ? (
             <>
-              <Box ml={"3"} minW={"44px"} textAlign={"center"}>
+              <Box ml={'3'} minW={'44px'} textAlign={'center'}>
                 <Text
-                  fontSize={"10px"}
+                  fontSize={'10px'}
                   color="brandGray.accent"
-                  mt={"1"}
+                  mt={'1'}
                   hidden={!showSettings}
                 >
                   {getShortenedTime(message.createdAt)}
                 </Text>
               </Box>
 
-              <Box ml="3" w={"full"} onContextMenu={show}>
+              <Box ml="3" w={'full'} onContextMenu={show}>
                 <MessageContent message={message} />
               </Box>
               {showSettings && showMenu ? (
                 <Box
                   onClick={show}
                   mr="2"
-                  _hover={{ cursor: "pointer" }}
-                  h={"5px"}
+                  _hover={{ cursor: 'pointer' }}
+                  h={'5px'}
                 >
                   <FaEllipsisH />
                 </Box>
               ) : (
-                <Box mr={"6"} />
+                <Box mr={'6'} />
               )}
             </>
           ) : (
@@ -95,19 +96,19 @@ export default function Message({ message, isCompact = false }) {
                   h="40px"
                   w="40px"
                   ml="4"
-                  mt={"1"}
+                  mt={'1'}
                   src={message.user.image}
                   _hover={{
-                    cursor: "pointer",
+                    cursor: 'pointer',
                   }}
                   onContextMenu={(e) => {
                     if (!isAuthor) profileShow(e);
                   }}
                 />
               </UserPopover>
-              <Box ml="3" w={"full"} onContextMenu={show}>
-                <Flex alignItems="center" justify={"space-between"}>
-                  <Flex alignItems={"center"}>
+              <Box ml="3" w={'full'} onContextMenu={show}>
+                <Flex alignItems="center" justify={'space-between'}>
+                  <Flex alignItems={'center'}>
                     <Text color={message.user.color ?? undefined}>
                       {message.user.nickname ?? message.user.username}
                     </Text>
@@ -116,7 +117,7 @@ export default function Message({ message, isCompact = false }) {
                     </Text>
                   </Flex>
                   {showSettings && showMenu && (
-                    <Box onClick={show} mr="2" _hover={{ cursor: "pointer" }}>
+                    <Box onClick={show} mr="2" _hover={{ cursor: 'pointer' }}>
                       <FaEllipsisH />
                     </Box>
                   )}
@@ -132,7 +133,7 @@ export default function Message({ message, isCompact = false }) {
           <Menu id={message.id} theme={theme.dark}>
             {message.filetype ? (
               <Item
-                className={"menu-item"}
+                className={'menu-item'}
                 onClick={() => {
                   if (message.url) openInNewTab(message.url);
                 }}
@@ -143,7 +144,7 @@ export default function Message({ message, isCompact = false }) {
                 </Flex>
               </Item>
             ) : !isAuthor ? null : (
-              <Item className={"menu-item"} onClick={onEditOpen}>
+              <Item className={'menu-item'} onClick={onEditOpen}>
                 <Flex align="center" justify="space-between" w="full">
                   <Text>Edit Message</Text>
                   <Icon as={MdEdit} />
@@ -151,7 +152,7 @@ export default function Message({ message, isCompact = false }) {
               </Item>
             )}
             {(isAuthor || isOwner) && (
-              <Item onClick={onDeleteOpen} className={"delete-item"}>
+              <Item onClick={onDeleteOpen} className={'delete-item'}>
                 <Flex align="center" justify="space-between" w="full">
                   <Text>Delete Message</Text>
                   <Icon as={FaRegTrashAlt} />

@@ -1,18 +1,18 @@
-import { Flex, GridItem, InputGroup, Text, Textarea } from "@chakra-ui/react";
-import getSocket from "api/getSocket";
-import { sendMessage } from "api/handler/messages";
-import React, { useRef, useState } from "react";
-import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
-import ResizeTextarea from "react-textarea-autosize";
-import channelStore from "stores/channelStore";
-import userStore from "stores/userStore";
-import { cKey, dmKey } from "utils/querykeys";
-import "../css/MessageInput.css";
-import FileUploadButton from "./FileUploadButton";
+import { Flex, GridItem, InputGroup, Text, Textarea } from '@chakra-ui/react';
+import getSocket from 'api/getSocket';
+import { sendMessage } from 'api/handler/messages';
+import React, { useRef, useState } from 'react';
+import { useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
+import ResizeTextarea from 'react-textarea-autosize';
+import channelStore from 'stores/channelStore';
+import userStore from 'stores/userStore';
+import { cKey, dmKey } from 'utils/querykeys';
+import '../css/MessageInput.css';
+import FileUploadButton from './FileUploadButton';
 
 export default function MessageInput() {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [isSubmitting, setSubmitting] = useState(false);
   const [currentlyTyping, setCurrentlyTyping] = useState(false);
   const inputRef = useRef();
@@ -26,7 +26,20 @@ export default function MessageInput() {
   const current = userStore((state) => state.current);
   const isTyping = channelStore((state) => state.typing);
 
-  async function handleAddMessage(event) {}
+  async function handleAddMessage(event) {
+    if (event.key === 'Enter') {
+      if (!text || !text.trim()) return;
+      socket.emit('stopTyping', channelId, current?.username);
+      setSubmitting(true);
+      setCurrentlyTyping(false);
+      const data = new FormData();
+      data.append('text', text.trim());
+      await sendMessage(channelId, data);
+      setText('');
+      setSubmitting(false);
+      inputRef?.current?.focus();
+    }
+  }
 
   const getTypingString = (members) => {
     switch (members.length) {
@@ -37,17 +50,17 @@ export default function MessageInput() {
       case 3:
         return `${members[0]}, ${members[1]} and ${members[2]}`;
       default:
-        return "Several people";
+        return 'Several people';
     }
   };
 
   function handleMessageChange(event) {
     const value = event.target.value;
     if (value.trim().length === 1 && !currentlyTyping) {
-      socket.emit("startTyping", channelId, current?.username);
+      socket.emit('startTyping', channelId, current?.username);
       setCurrentlyTyping(true);
     } else if (value.length === 0) {
-      socket.emit("stopTyping", channelId, current?.username);
+      socket.emit('stopTyping', channelId, current?.username);
       setCurrentlyTyping(false);
     }
     if (value.length <= 2000) setText(value);
@@ -65,7 +78,7 @@ export default function MessageInput() {
       gridColumn={3}
       gridRow={3}
       px="20px"
-      pb={isTyping.length > 0 ? "0" : "26px"}
+      pb={isTyping.length > 0 ? '0' : '26px'}
       bg="brandGray.light"
     >
       <InputGroup
@@ -83,10 +96,10 @@ export default function MessageInput() {
           resize="none"
           minRows={1}
           pl="3rem"
-          name={"text"}
+          name={'text'}
           placeholder={getPlaceholder()}
           border="0"
-          _focus={{ border: "0" }}
+          _focus={{ border: '0' }}
           ref={inputRef}
           isDisabled={isSubmitting}
           value={text}
@@ -96,17 +109,17 @@ export default function MessageInput() {
         <FileUploadButton />
       </InputGroup>
       {isTyping.length > 0 && (
-        <Flex align={"center"} fontSize={"12px"} my={1}>
+        <Flex align={'center'} fontSize={'12px'} my={1}>
           <div className="typing-indicator">
             <span />
             <span />
             <span />
           </div>
-          <Text ml={"1"} fontWeight={"semibold"}>
+          <Text ml={'1'} fontWeight={'semibold'}>
             {getTypingString(isTyping)}
           </Text>
-          <Text ml={"1"}>
-            {isTyping.length === 1 ? "is" : "are"} typing...{" "}
+          <Text ml={'1'}>
+            {isTyping.length === 1 ? 'is' : 'are'} typing...{' '}
           </Text>
         </Flex>
       )}

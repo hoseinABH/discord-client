@@ -10,13 +10,13 @@ import {
   Progress,
   Text,
   useDisclosure,
-} from "@chakra-ui/react";
-import { sendMessage } from "api/handler/messages";
-import StyledTooltip from "components/sections/StyledTooltip";
-import React, { useRef, useState } from "react";
-import { MdAddCircle } from "react-icons/md";
-import { useParams } from "react-router-dom";
-import { FileSchema } from "validation/message.schema";
+} from '@chakra-ui/react';
+import { sendMessage } from 'api/handler/messages';
+import StyledTooltip from 'components/sections/StyledTooltip';
+import { useRef, useState } from 'react';
+import { MdAddCircle } from 'react-icons/md';
+import { useParams } from 'react-router-dom';
+import { FileSchema } from 'validation/message.schema';
 
 export default function FileUploadButton() {
   const { channelId } = useParams();
@@ -46,7 +46,7 @@ export default function FileUploadButton() {
     }
 
     const data = new FormData();
-    data.append("file", file);
+    data.append('file', file);
     await sendMessage(channelId, data, (event) => {
       const loaded = Math.round((100 * event.loaded) / event.total);
       setProgress(loaded);
@@ -56,11 +56,11 @@ export default function FileUploadButton() {
 
   return (
     <InputLeftElement
-      color={"iconColor"}
-      _hover={{ cursor: "pointer", color: "#fcfcfc" }}
+      color={'iconColor'}
+      _hover={{ cursor: 'pointer', color: '#fcfcfc' }}
       onClick={() => inputFile.current.click()}
     >
-      <Icon as={MdAddCircle} boxSize={"20px"} />
+      <Icon as={MdAddCircle} boxSize={'20px'} />
       <input
         type="file"
         ref={inputFile}
@@ -70,7 +70,7 @@ export default function FileUploadButton() {
           if (!e.currentTarget.files) return;
           handleSubmit(e.currentTarget.files[0]).then(() => {
             setSubmitting(false);
-            e.target.value = "";
+            e.target.value = '';
           });
         }}
       />
