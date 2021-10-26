@@ -1,5 +1,4 @@
 import AppProviders from 'AppProviders';
-
 import ReactDOM from 'react-dom';
 import App from './App';
 

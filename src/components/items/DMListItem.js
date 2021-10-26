@@ -24,10 +24,10 @@ export default function DMListItem({ dm }) {
   const handleCloseDM = async (event) => {
     event.preventDefault();
 
-    await closeDirectMessage(dm.id);
-    cache.setQueryData(dmKey, (d) =>
-      d?.filter((channel) => channel.id !== dm.id)
-    );
+    // await closeDirectMessage(dm.id);
+    // cache.setQueryData(dmKey, (d) =>
+    //   d?.filter((channel) => channel.id !== dm.id)
+    // );
     if (isActive) {
       history.replace('/channels/me');
     }

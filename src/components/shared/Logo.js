@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Logo() {
   return (
     <svg width="124" height="34" viewBox="0 0 124 34" className="logo-3LF899">
