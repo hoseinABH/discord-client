@@ -6,40 +6,48 @@ import {
   ListItem,
   Text,
   useDisclosure,
-} from "@chakra-ui/react";
-import React from "react";
-import { FaEllipsisV } from "react-icons/fa";
-import { useQueryClient } from "react-query";
-import { useHistory } from "react-router-dom";
-import { getOrCreateDirectMessage } from "api/handler/dm";
-import { dmKey } from "utils/querykeys";
-import RemoveFriendModal from "components/modals/RemoveFriendModal";
+} from '@chakra-ui/react';
+import { FaEllipsisV } from 'react-icons/fa';
+import { useQueryClient } from 'react-query';
+import { useHistory } from 'react-router-dom';
+import { getOrCreateDirectMessage } from 'api/handler/dm';
+import { dmKey } from 'utils/querykeys';
+import RemoveFriendModal from 'components/modals/RemoveFriendModal';
 
 export default function FriendsListItem({ friend }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const queryClient = useQueryClient();
+  const history = useHistory();
+  const getDMChannel = async () => {
+    // const { data } = await getOrCreateDirectMessage(friend.id);
 
-  async function getDMChannel() {}
+    // if (data) {
+    //   queryClient.invalidateQueries(dmKey);
+    //   history.push(`/channels/me/${data.id}`);
+    // }
+    history.push(`/channels/me/${friend.id}`);
+  };
 
   return (
     <ListItem
       p="3"
       mx="3"
       _hover={{
-        bg: "brandGray.dark",
-        borderRadius: "5px",
+        bg: 'brandGray.dark',
+        borderRadius: '5px',
       }}
     >
       <Flex align="center" justify="space-between">
         <Flex
           align="center"
-          w={"full"}
+          w={'full'}
           onClick={getDMChannel}
-          _hover={{ cursor: "pointer" }}
+          _hover={{ cursor: 'pointer' }}
         >
           <Avatar size="sm" src={friend.image}>
             <AvatarBadge
               boxSize="1.25em"
-              bg={friend.isOnline ? "green.500" : "gray.500"}
+              bg={friend.isOnline ? 'green.500' : 'gray.500'}
             />
           </Avatar>
           <Text ml="2">{friend.username}</Text>

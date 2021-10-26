@@ -6,13 +6,16 @@ import DMPlaceholder from 'components/sections/DMPlaceholder';
 import FriendsListButton from 'components/sections/FriendsListButton';
 import React from 'react';
 import { useQuery } from 'react-query';
+import { fake_dms as data } from 'utils/fake';
 import { dmKey } from 'utils/querykeys';
 import AccountBar from '../AccountBar';
 import dmScrollerCss from './css/dmScrollerCSS';
 
+// fake
+
 export default function DMSidebar() {
   useDMSocket();
-
+  // const { data } = useQuery(dmKey, getUserDMs);
   return (
     <GridItem
       gridColumn={'2'}
@@ -33,7 +36,10 @@ export default function DMSidebar() {
         DIRECT MESSAGES
       </Text>
       <UnorderedList listStyleType="none" ml="0" mt="4">
-        {'no data' && (
+        {data?.map((dm) => (
+          <DMListItem key={dm.id} dm={dm} />
+        ))}
+        {data?.length === 0 && (
           <Box>
             <DMPlaceholder />
             <DMPlaceholder />

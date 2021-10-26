@@ -12,7 +12,7 @@ import { fake_friends as data } from 'utils/fake';
 
 export default function FriendsList() {
   // const { data } = useQuery(fKey, () => getFriends);
-  useFriendSocket();
+  // useFriendSocket();
 
   if (data?.length === 0) {
     return (

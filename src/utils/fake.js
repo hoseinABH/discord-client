@@ -15,3 +15,21 @@ export const fake_friends = [
   { id: 1, username: 'ahmad' },
   { id: 2, username: 'asghar', isOnline: true },
 ];
+
+export const fake_dms = [
+  {
+    id: 1,
+    user: {
+      id: 1,
+      username: 'ahmad',
+    },
+  },
+  {
+    id: 2,
+    user: {
+      id: 3,
+      username: 'asghar',
+      isOnline: true,
+    },
+  },
+];
